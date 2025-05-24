@@ -1,0 +1,25 @@
+import requests
+import time
+
+def send_webhooks(url, message, count, interval):
+    for i in range(1, count + 1):
+        payload = {"content": f"{message} ({i}/{count})"}
+        try:
+            res = requests.post(url, json=payload)
+            if res.status_code == 204:
+                print(f"[{i}/{count}] 送信成功")
+            else:
+                print(f"[{i}/{count}] 送信失敗 (ステータス: {res.status_code})")
+        except Exception as e:
+            print(f"[{i}/{count}] エラー発生: {e}")
+            break
+        time.sleep(interval)
+    print("✅ 完了")
+
+if __name__ == "__main__":
+    webhook_url = input("Webhook URL を入力: ")
+    message = input("送信メッセージを入力: ")
+    count = int(input("送信回数を入力: "))
+    interval = float(input("送信間隔（秒）を入力 (例: 0.5): "))
+
+    send_webhooks(webhook_url, message, count, interval)
